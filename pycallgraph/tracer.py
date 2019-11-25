@@ -161,6 +161,12 @@ class TraceProcessor(Thread):
             keep = True
             code = frame.f_code
 
+
+            #Adding function arguments
+            # self.call_dict['code'] = []
+            # for i in range(frame.f_code.co_argcount):
+            #     self.call_dict['code'].append(frame.f_code.co_varnames[i])
+
             # Stores all the parts of a human readable name of the current call
             full_name_list = []
 
@@ -294,7 +300,7 @@ class TraceProcessor(Thread):
         grp = defaultdict(list)
         for node in self.nodes():
             grp[node.group].append(node)
-        for g in grp.iteritems():
+        for g in grp.items():
             yield g
 
     def stat_group_from_func(self, func, calls):
@@ -312,14 +318,14 @@ class TraceProcessor(Thread):
         return stat_group
 
     def nodes(self):
-        for func, calls in self.func_count.iteritems():
+        for func, calls in self.func_count.items():
             yield self.stat_group_from_func(func, calls)
 
     def edges(self):
-        for src_func, dests in self.call_dict.iteritems():
+        for src_func, dests in self.call_dict.items():
             if not src_func:
                 continue
-            for dst_func, calls in dests.iteritems():
+            for dst_func, calls in dests.items():
                 edge = self.stat_group_from_func(dst_func, calls)
                 edge.src_func = src_func
                 edge.dst_func = dst_func

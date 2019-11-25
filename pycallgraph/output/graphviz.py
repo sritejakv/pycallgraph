@@ -15,6 +15,7 @@ class GraphvizOutput(Output):
 
     def __init__(self, **kwargs):
         self.tool = 'dot'
+        self.dot_file = None
         self.output_file = 'pycallgraph.png'
         self.output_type = 'png'
         self.font_name = 'Verdana'
@@ -61,6 +62,11 @@ class GraphvizOutput(Output):
             help='Size of the font to be used',
         )
 
+        subparser.add_argument(
+            '--dot-file', type=str, default=defaults.dot_file,
+            help='File name along with the path to store the dot file',
+        )
+
     def sanity_check(self):
         self.ensure_binary(self.tool)
 
@@ -100,6 +106,10 @@ class GraphvizOutput(Output):
         fd, temp_name = tempfile.mkstemp()
         with os.fdopen(fd, 'w') as f:
             f.write(source)
+
+        if self.dot_file:
+            with open(self.dot_file, 'w') as dotFile:
+                dotFile.write(source)
 
         cmd = '"{0}" -T{1} -o{2} {3}'.format(
             self.tool, self.output_type, self.output_file, temp_name
@@ -151,7 +161,7 @@ class GraphvizOutput(Output):
 
     def attrs_from_dict(self, d):
         output = []
-        for attr, val in d.iteritems():
+        for attr, val in d.items():
             output.append('%s = "%s"' % (attr, val))
         return ', '.join(output)
 
@@ -167,7 +177,7 @@ class GraphvizOutput(Output):
 
     def generate_attributes(self):
         output = []
-        for section, attrs in self.graph_attributes.iteritems():
+        for section, attrs in self.graph_attributes.items():
             output.append('{0} [ {1} ];'.format(
                 section, self.attrs_from_dict(attrs),
             ))

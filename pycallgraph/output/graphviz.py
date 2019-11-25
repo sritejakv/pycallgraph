@@ -108,6 +108,10 @@ class GraphvizOutput(Output):
             f.write(source)
 
         if self.dot_file:
+            dir_path = os.sep.join(self.dot_file.split(os.sep)[:-1])
+            if not os.path.exists(dir_path):
+                os.makedirs(dir_path)
+
             with open(self.dot_file, 'w') as dotFile:
                 dotFile.write(source)
 

@@ -100,8 +100,8 @@ class GraphvizOutput(Output):
 
     def done(self):
         source = self.generate()
-
-        self.debug(source)
+        #Commenting the line so that the dot graph is not printed in the console.
+        #self.debug(source)
 
         fd, temp_name = tempfile.mkstemp()
         with os.fdopen(fd, 'w') as f:
